@@ -301,10 +301,19 @@ defined sdk directory. Defaults to `android-mode-sdk-dir'."
      (android-ant ,task)))
 
 (android-defun-ant-task "clean")
-(android-defun-ant-task "compile")
-(android-defun-ant-task "install")
+(android-defun-ant-task "release")
 (android-defun-ant-task "uninstall")
 
+
+(defun android-ant-install ()
+  "Run 'ant debug install' in the project root directory."
+  (interactive)
+  (android-ant "debug install"))
+
+(defun android-ant-compile ()
+  "Run 'ant debug' in the project root directory."
+  (interactive)
+  (android-ant "debug"))
 
                                         ; mode
 
@@ -315,7 +324,7 @@ defined sdk directory. Defaults to `android-mode-sdk-dir'."
     ("C" . android-ant-clean)
     ("c" . android-ant-compile)
     ("i" . android-ant-install)
-    ("r" . android-ant-reinstall)
+;;    ("r" . android-ant-reinstall)
     ("u" . android-ant-uninstall)))
 
 (defvar android-mode-map (make-sparse-keymap))
