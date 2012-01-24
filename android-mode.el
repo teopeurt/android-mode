@@ -297,7 +297,7 @@ defined sdk directory. Defaults to `android-mode-sdk-dir'."
   "Run ant TASK in the project root directory."
   (interactive "sTask: ")
   (android-in-root
-   (compile (format "ant %s %s" (read-from-minibuffer "Build target: ") task))))
+   (compile (format "ant %s %s" (completing-read "Build target [debug]: " '("debug" "release" "instrument") nil nil nil nil "debug") task))))
 
 (defmacro android-defun-ant-task (task)
   `(defun ,(intern (concat "android-ant-" task)) ()
