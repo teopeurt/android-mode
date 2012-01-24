@@ -285,8 +285,7 @@ defined sdk directory. Defaults to `android-mode-sdk-dir'."
   (switch-to-buffer android-logcat-buffer)
   (goto-char (point-max)))
 
-
-                                        ; ant
+; ant
 
 (defun android-ant (task)
   "Run ant TASK in the project root directory."
@@ -294,37 +293,38 @@ defined sdk directory. Defaults to `android-mode-sdk-dir'."
   (android-in-root
    (compile (concat "ant " task))))
 
+(defun android-ant-with-target (task)
+  "Run ant TASK in the project root directory."
+  (interactive "sTask: ")
+  (android-in-root
+   (compile (format "ant %s %s" (read-from-minibuffer "Build target: ") task))))
+
 (defmacro android-defun-ant-task (task)
   `(defun ,(intern (concat "android-ant-" task)) ()
      ,(concat "Run 'ant " task "' in the project root directory.")
      (interactive)
      (android-ant ,task)))
 
-(android-defun-ant-task "clean")
-(android-defun-ant-task "release")
-(android-defun-ant-task "uninstall")
+(defmacro android-defun-ant-task-with-target (task)
+  `(defun ,(intern (concat "android-ant-" task)) ()
+     ,(concat "Run 'ant " task "' in the project root directory.")
+     (interactive)
+     (android-ant-with-target ,task)))
 
+(android-defun-ant-task "test")
+(android-defun-ant-task-with-target "clean")
+(android-defun-ant-task-with-target "install")
+(android-defun-ant-task-with-target "uninstall")
 
-(defun android-ant-install ()
-  "Run 'ant debug install' in the project root directory."
-  (interactive)
-  (android-ant "debug install"))
-
-(defun android-ant-compile ()
-  "Run 'ant debug' in the project root directory."
-  (interactive)
-  (android-ant "debug"))
-
-                                        ; mode
+; mode
 
 (defconst android-mode-keys
   '(("d" . android-start-ddms)
     ("e" . android-start-emulator)
     ("l" . android-logcat)
+    ("t" . android-ant-test)
     ("C" . android-ant-clean)
-    ("c" . android-ant-compile)
     ("i" . android-ant-install)
-;;    ("r" . android-ant-reinstall)
     ("u" . android-ant-uninstall)))
 
 (defvar android-mode-map (make-sparse-keymap))
